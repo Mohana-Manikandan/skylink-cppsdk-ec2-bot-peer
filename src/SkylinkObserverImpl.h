@@ -14,8 +14,6 @@
 #include <string>
 #include <map>
 
-#include <SDL.h>
-
 #include "portaudio.h"
 
 #define FRAMES_PER_BUFFER  480
@@ -25,12 +23,9 @@ namespace Temasys { // TODO: put sample code outside of namespace
 
   class VideoRenderer : public VideoMediaSink {
   public:
-    VideoRenderer(const std::string& windowName);
-    ~VideoRenderer() override;
-    void onFrame(const I420Frame& frame) override;
-
-    SDL_Window* window_;
-    ARGBFrame argb_frame_;
+    VideoRenderer(const std::string& windowName) {}
+    ~VideoRenderer() override {}
+    void onFrame(const I420Frame& frame) override {}
   };
 
   class AudioRenderer : public AudioMediaSink {

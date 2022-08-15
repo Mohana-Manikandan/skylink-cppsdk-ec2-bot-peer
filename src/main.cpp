@@ -10,9 +10,6 @@
 #include "temasys/Logs.h"
 #include "temasys/Helpers.h"
 
-// Includes from other non-standard projects
-#include <SDL.h>
-
 // STD Includes
 #include <iostream>
 #include <stdio.h>
@@ -86,7 +83,7 @@ int main(int argc, char * argv[])
   std::string appKey          = "";
   std::string secret          = "";
   std::string roomName        = "";
-  std::string userData        = "{ userName: \"Alice\", job: \"captain\" }";
+  std::string userData        = "{ \"userName\": \"Mohana Manikandan\"}";
   LogLevel    skylinkLogLevel = LogLevel::SL_ERROR;
   LogLevel    webrtcLogLevel  = LogLevel::SL_NONE;
   bool        sendAudio       = true;
@@ -159,9 +156,6 @@ int main(int argc, char * argv[])
   // Set log levels
   Temasys::SetLogLevel(skylinkLogLevel, webrtcLogLevel);
 
-  // SDL is used for video rendering
-  SDL_Init(SDL_INIT_EVERYTHING);
-
   // Init skylink
   auto skylink = Skylink::Create(appKey, secret);
   skylink->setUserData(userData);
@@ -192,9 +186,7 @@ int main(int argc, char * argv[])
   }
 
   // Video constraints
-  MediaConstraints videoConstraints;
-  videoConstraints.maxWidth = 640;
-  videoConstraints.maxFramerate = 20;
+  MediaConstraints videoConstraints{};
 
   // Capture audio
   AudioMedia_Ptr microphone;
@@ -251,91 +243,12 @@ int main(int argc, char * argv[])
   std::cout << "Joining room" << std::endl << std::flush;
   skylink->joinRoom(roomName);
 
-  ////////////////////////////////////////////////////////////
-  // Checks the setUserData API
-  // sleep(10);
-  // std::cout << "Setting new local userData." << std::endl << std::flush;
-  // skylink->setUserData("newUserDataIsASimpleString");
-
-  ////////////////////////////////////////////////////////////
-  // Mute and unmute audio media
-  // sleep(10);
-  // std::cout << "Muting local audio." << std::endl << std::flush;
-  // microphone->mute();
-  // sleep(10);
-  // std::cout << "Unmuting local audio." << std::endl << std::flush;
-  // microphone->unmute();
-
-  ////////////////////////////////////////////////////////////
-  // Mute and unmute video media
-  // sleep(10);
-  // std::cout << "Muting local video." << std::endl << std::flush;
-  // camera->stop();
-  // sleep(10);
-  // std::cout << "Unmuting local video." << std::endl << std::flush;
-  // camera->unmute();
-
-  ////////////////////////////////////////////////////////////
-  // Stop sending and restart sending audio
-  // sleep(10);
-  // std::cout << "Stop sending local audio." << std::endl << std::flush;
-  // skylink->stopSendingMedia(microphone);
-  // sleep(10);
-  // std::cout << "Start sending local audio again." << std::endl << std::flush;
-  // skylink->sendMedia(microphone, streamID);
-
-  ////////////////////////////////////////////////////////////
-  // Stop sending and restart sending video
-  // sleep(10);
-  // std::cout << "Stop sending local video." << std::endl << std::flush;
-  // skylink->stopSendingMedia(camera);
-  // sleep(10);
-  // std::cout << "Start sending local video again." << std::endl << std::flush;
-  // skylink->sendMedia(camera, streamID);
-
-  ////////////////////////////////////////////////////////////
-  // Checks the sending message API
-  // std::cout << "Type a message to send. (rendering will be blocked until you do..." << std::endl << std::flush;
-  // std::string message;
-  // std::cin >> message;
-  // std::cout << "Sending message" << std::endl << std::flush;
-  // skylink->sendMessage(message/*, "replace me with a target to send a private message"*/);
-
-  ////////////////////////////////////////////////////////////
-  // Recording
-  // std::cout << "Starting recording for 60sec" << std::endl << std::flush;
-  // skylink->startRecording();
-  // sleep(15);
-  // std::cout << "Stopping recording" << std::endl << std::flush;
-  // skylink->stopRecording();
-
-  ////////////////////////////////////////////////////////////
-  // Checks leave and re-join room
-  // sleep(10);
-  // std::cout << "Leaving room." << std::endl << std::flush;
-  // skylink->leaveRoom();
-  // sleep(10);
-  // std::cout << "Joining room again." << std::endl << std::flush;
-  // skylink->joinRoom(roomName);
-
-  ////////////////////////////////////////////////////////////
-  // SDL loop. Mandartory for rendering via SDL
-  // See https://jira.temasys.com.sg/browse/ESC-86
-  while (!stopProgram) { // running will be put to FALSE when the user type /quit
-    SDL_Event event;
-    if (SDL_PollEvent(&event))
-    {
-      if (event.type == SDL_QUIT) {
-        break; // Break the loop, exit the program
-      }
-    }
-    SDL_Delay(20);
+  while (!stopProgram) {
+    // do nothing
   }
 
   //cleanup
   skylink->leaveRoom();
-
-  SDL_Quit();
 
   // ORDER MATTERS
   // Skylink MUST be released last, as it hold thread that some destructors will run on

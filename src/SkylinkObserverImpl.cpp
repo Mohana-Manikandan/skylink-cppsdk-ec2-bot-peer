@@ -16,61 +16,6 @@
 
 
 namespace Temasys {
-/////////////////////////////////////////////////////////////////////////
-///
-/// VideoRenderer
-///
-/////////////////////////////////////////////////////////////////////////
-
-VideoRenderer::VideoRenderer(const std::string& windowName)
-: argb_frame_(0,0) {
-  window_ = SDL_CreateWindow( windowName.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN);
-  assert(window_);
-}
-
-
-VideoRenderer::~VideoRenderer() {
-  SDL_DestroyWindow(window_);  
-}
-
-void VideoRenderer::onFrame(const I420Frame& frame) {
-  std::string strTmp = std::string("I420 frame with: ") + std::to_string(frame.width) + std::string(", height: ") + std::to_string(frame.height);
-  std::string strTmp2 = std::string("stride y, u, v, a:") + std::to_string(frame.strideY) + ", " + std::to_string(frame.strideU) + ", " + std::to_string(frame.strideV) + ", " + std::to_string(frame.strideA);
-
-  if (!window_) return;
-
-  if (frame.width != argb_frame_.width || frame.height != argb_frame_.height) {
-    argb_frame_.resize(frame.width, frame.height);
-    SDL_SetWindowSize(window_, frame.width, frame.height);
-  }
-
-  VideoMediaSink::toARGB(frame, argb_frame_);
-  
-  SDL_Surface *screen  = SDL_GetWindowSurface(window_);
-  SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(argb_frame_.data,
-                                                  argb_frame_.width,
-                                                  argb_frame_.height,
-                                                  32,
-                                                  argb_frame_.width*4,
-                                                  0, 0, 0, 0
-  );
-
-
-  // Put the image in the window
-  if ( SDL_BlitSurface( surface, NULL, screen, NULL ) != 0) {
-    std::cout << SDL_GetError() << std::endl << std::flush;
-    SDL_FreeSurface(surface); // Free the memory
-    return;
-  }
-  SDL_UpdateWindowSurface(window_); // Refresh the window
-  SDL_FreeSurface(surface); // Free the memory
-}
-
-/////////////////////////////////////////////////////////////////////////
-///
-/// AudioRenderer
-///
-/////////////////////////////////////////////////////////////////////////
 
 AudioRenderer::AudioRenderer(int samplingFrequency, int numChannels)
 {
